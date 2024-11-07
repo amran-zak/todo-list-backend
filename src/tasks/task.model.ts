@@ -1,7 +1,5 @@
 export interface Task {
-    id: string;
-    name: string;
-    completed: boolean;
-  }
+  title: string;
+  status: 'todo' | 'inProgress' | 'done';
+}
 
-  
