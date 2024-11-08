@@ -8,8 +8,14 @@ import { Task } from './task.schema';
 export class TasksService {
   constructor(@InjectModel(Task.name) private taskModel: Model<Task>) { }
 
-  async findAll(): Promise<Task[]> {
-    return this.taskModel.find().exec();
+  async findPaginated(page: number, limit: number): Promise<{ tasks: Task[], total: number }> {
+    const tasks = await this.taskModel
+      .find()
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+    const total = await this.taskModel.countDocuments().exec();
+    return { tasks, total };
   }
 
   async createTask(title: string): Promise<Task> {

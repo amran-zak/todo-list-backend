@@ -1,5 +1,5 @@
 // src/tasks/tasks.controller.ts
-import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './task.schema';
 
@@ -8,8 +8,11 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) { }
 
   @Get()
-  async findAll(): Promise<Task[]> {
-    return this.tasksService.findAll();
+  async findPaginated(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<{ tasks: Task[], total: number }> {
+    return this.tasksService.findPaginated(page, limit);
   }
 
   @Post()
